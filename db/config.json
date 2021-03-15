@@ -1,8 +1,0 @@
-{
-  "db": {
-    "name": "usoft",
-    "user": "opoliarenk",
-    "password": "securepass",
-    "dialect" : "mysql"
-  }
-}
