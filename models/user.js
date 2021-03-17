@@ -1,49 +1,15 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../db/db');
+// const Sequelize = require('sequelize');
+// const sequelize = require('../db/db');
 
-const user = sequelize.define('userEntity', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true,
-    },
-    login: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false,
-    },
-    password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-    full_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-    email: {
-        type: Sequelize.STRING,
-        unique: true,
-        isEmail: true,
-        allowNull: false,
-    },
-    profilePicture: {
-        type: Sequelize.STRING,
-        allowNull: true,
-    },
-    rating: {
-        type: Sequelize.INTEGER,
-        defaultValue: '0',
-        allowNull: false,
-    },
-    role: {
-        type: Sequelize.STRING,
-        defaultValue: 'user',
-        allowNull: false,
-    }
-});
+// const user = sequelize.define('userEntity', {
+//
+// });
 
 class User {
+    constructor(Sequelize, DataTypes) {
+        this.Sequelize = Sequelize;
+        this.DataTypes = DataTypes;
+    }
     async createUser(login, password, full_name, email) {
         try {
             return await user.create({

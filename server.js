@@ -28,6 +28,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({expected: true}));
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/posts', postRouter);
+app.use('/api/post', postRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/comments', commentsRouter);

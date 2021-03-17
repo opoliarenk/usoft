@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {User} = require('../models/user');
-const user = new User();
+const {User} = require('../sequlize');
+// const user = new User();
 
 router.post("/register", async (req, res) => {
     console.log("/api/auth/register");
@@ -12,7 +12,7 @@ router.post("/register", async (req, res) => {
         email,
     } = req.body;
     console.log(req.body);
-    await user.createUser(login, password, full_name, email);
+    // await user.createUser(login, password, full_name, email);
 });
 
 router.post("/login", async (req, res) => {
