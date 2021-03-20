@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {User} = require('../sequlize');
+// const {User} = require('../sequlize');
 // const user = new User();
 
 router.post("/register", async (req, res) => {
