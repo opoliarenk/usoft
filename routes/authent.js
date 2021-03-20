@@ -1,19 +1,10 @@
-const express = require('express');
-const router = express.Router();
-// const {User} = require('../sequlize');
-// const user = new User();
+'use strict';
 
-router.post("/register", async (req, res) => {
-    console.log("/api/auth/register");
-    const {
-        login,
-        password,
-        full_name,
-        email,
-    } = req.body;
-    console.log(req.body);
-    // await user.createUser(login, password, full_name, email);
-});
+const user = require("../controllers/controller.js");
+
+let router = require("express").Router();
+
+router.post("/register", user.register);
 
 router.post("/login", async (req, res) => {
     console.log("/api/auth/login");

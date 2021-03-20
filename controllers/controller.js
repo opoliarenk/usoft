@@ -1,92 +1,59 @@
+'use strict';
+
 const db = require("../models");
 const User = db.user;
-// const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
-
-exports.register = (req, res) => {
-    if (!req.body.login || !req.body.password || !req.body.confirmPass || !req.body.email) {
-        res.status(400).send({
-            message: "enter smth"
-        });
-        return;
-    }
-
+exports.register = async (req, res) => {
+    // if (!req.body.login || !req.body.password || !req.body.confirmPass || !req.body.email) {
+    //     res.status(400).send({
+    //         message: "Validation error"
+    //     });
+    //     return;
+    // }
     const {
         login,
         password,
         full_name,
         email,
     } = req.body;
-
-    const user = {
-        login: login,
-        password: password,
-        full_name: full_name,
-        email: email,
-    };
-
-    User.create(user)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
+    try {
+        const findUser = await User.findOne({where: {[Op.or] : [ {login}, {email}]}});
+        if (findUser) {
+            res.status(422).send({
+                message: 'User with that email or login already exists'
             });
-        });
-};
+            return;
+        }
+        const user = {
+            login: login,
+            password: password,
+            full_name: full_name,
+            email: email,
+        };
 
-// Create and Save a new Tutorial
-exports.create = (req, res) => {
-    // Validate request
-    if (!req.body.title) {
-        res.status(400).send({
-            message: "Content can not be empty!"
+        await User.create(user)
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while creating the User."
+                });
+            });
+        res.status(201).send({
+            message: 'Account created successfully'
+        });
+        return;
+    } catch (e) {
+        console.log(e);
+        res.status(500).send({
+                message: 'Could not perform operation at this time, kindly try again later.'
         });
         return;
     }
 
-    // Create a Tutorial
-    const tutorial = {
-        title: req.body.title,
-        description: req.body.description,
-        published: req.body.published ? req.body.published : false
-    };
-
-    // Save Tutorial in the database
-    Tutorial.create(tutorial)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Tutorial."
-            });
-        });
 };
 
-exports.delete = (req, res) => {
-    const id = req.params.id;
-
-    Tutorial.destroy({
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Tutorial was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete Tutorial with id=" + id
-            });
-        });
-};
+// exports.deleteUser =
