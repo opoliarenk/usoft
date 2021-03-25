@@ -5,19 +5,21 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-const db = require("./models");
+const PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(router);
 
+//DB connection
+require("./database/connection");
+
+// const router = express.Router();
 require("./routes/routes")(app);
-
-const PORT = process.env.PORT || 8080;
 
 async function start () {
     try {
-        await db.sequelize.sync()
+        // await db.sequelize.sync()
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
@@ -26,6 +28,3 @@ async function start () {
     }
 }
 start();
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({expected: true}));
