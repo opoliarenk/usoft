@@ -33,7 +33,7 @@ module.exports = {
         allowNull: true,
       },
       rating: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         defaultValue: '0',
         allowNull: false,
       },
@@ -43,8 +43,9 @@ module.exports = {
         allowNull: false,
       },
       confirmed: {
-        type: Sequelize.BOOL,
-        defaultValue: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,

@@ -40,4 +40,8 @@ module.exports = sequelize.define("User", {
         defaultValue: 'user',
         allowNull: false,
     },
+    confirmed: {
+        type: Sequelize.BOOL,
+        defaultValue: false,
+    },
 })

@@ -66,6 +66,7 @@ exports.register = async (req, res) => {
             password: await bcrypt.hash(password, saltRounds),
             full_name: full_name,
             email: email,
+            confirmed: false,
         };
 
         await User.create(user)
@@ -83,7 +84,7 @@ exports.register = async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(500).send({
-                message: 'Could not perform operation at this time, kindly try again later.'
+            message: 'Could not perform operation at this time, kindly try again later.'
         });
         return;
 
@@ -109,6 +110,11 @@ exports.login = async (req, res) => {
         } else if (!bcrypt.compare(password, user.password)) {
             res.status(500).send({
                 message: 'invalid password'
+            });
+        }
+        if (!user.confirmed) {
+            res.status(500).send({
+                message: 'please confirm email'
             });
         }
         res.status(201).send({
