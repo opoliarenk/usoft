@@ -47,6 +47,14 @@ module.exports = {
         defaultValue: 0,
         allowNull: false,
       },
+      confirmStr: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      resetToken: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
     })

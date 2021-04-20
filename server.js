@@ -17,6 +17,7 @@ require("./database/connection");
 // const router = express.Router();
 require("./routes/routes")(app);
 
+
 async function start () {
     try {
         // await db.sequelize.sync()

@@ -41,7 +41,16 @@ module.exports = sequelize.define("User", {
         allowNull: false,
     },
     confirmed: {
-        type: Sequelize.BOOL,
-        defaultValue: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+    },
+    confirmStr: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    resetToken: {
+        type: Sequelize.STRING,
+        allowNull: true,
     },
 })
