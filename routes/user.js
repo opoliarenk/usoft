@@ -1,28 +1,18 @@
 'use strict'
 
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const user = require('../controllers/user');
 
-router.get('/', });
+router.get('/', user.getALlUsers);
 
-router.get('/:id', async (req, res) => {
-    console.log("get spec user data");
-});
+router.get('/:id', user.getUserById);
 
-router.post('/', async (req, res) => {
-    console.log("create a new user");
-});
+router.post('/', user.createUser);
 
-router.post('avatar', async (req, res) => {
-    console.log("let avatar");
-});
+router.post('/avatar', user.uploadAvatar);
 
-router.patch('/:id', async (req, res) => {
-    console.log("update user data");
-});
+router.patch('/:id', user.updUser);
 
-router.delete('/:id', async (req, res) => {
-    console.log(`delete user ${req.params.id}`);
-});
+router.delete('/:id', user.deleteUser);
 
 module.exports = router;

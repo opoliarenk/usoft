@@ -10,10 +10,9 @@ const jwt = require("jsonwebtoken");
 const sendMail = require('../helper/sendMessageEmail');
 
 exports.register = asyncHand(async (req, res) => {
-    const {login, email, password, fullName, passwordConfirm} = req.body;
+    const {login, email, password, fullName, passConfirm} = req.body;
     const checkLogin = await User.findOne({where: {login: login}});
     const checkEmail = await User.findOne({where: {email: email}});
-    // const checkPass =
     const validEmail = isEmail.validate(email, {errorLevel: false});
 
 
@@ -21,18 +20,28 @@ exports.register = asyncHand(async (req, res) => {
         res.status(400).send({
             message: 'User with that login already exists',
         });
+
         return ;
     }
     if (checkEmail) {
         res.status(400).send({
             message: 'User with that email already exists',
         });
+
         return ;
     }
     if (!validEmail) {
         res.status(400).send({
             message: 'Incorrect email',
         });
+
+        return;
+    }
+    if (password !== passConfirm) {
+        res.status(400).send({
+            message: 'confirm your password'
+        });
+
         return;
     }
 
@@ -41,7 +50,7 @@ exports.register = asyncHand(async (req, res) => {
     await User.create({
         login: login,
         password: await bcrypt.hash(password, saltRounds),
-        full_name: fullName,
+        fullName: fullName,
         email: email,
         confirmed: false,
         confirmStr: confirmStr,
@@ -92,7 +101,7 @@ exports.login = async (req, res) => {
         }
         const payload = { id: user.id };
         const token = jwt.sign(payload, 'gk4Fryv', {
-            expiresIn: 3000,
+            expiresIn: Date.now() + 36000,
         });
 
         res.status(200).json({ success: true, data: token });

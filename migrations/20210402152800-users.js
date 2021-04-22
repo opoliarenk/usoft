@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      full_name: {
+      fullName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -28,7 +28,7 @@ module.exports = {
         isEmail: true,
         allowNull: false,
       },
-      profilePicture: {
+      avatar: {
         type: Sequelize.STRING,
         allowNull: true,
       },

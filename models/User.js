@@ -16,7 +16,7 @@ module.exports = sequelize.define("User", {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    full_name: {
+    fullName: {
         type: Sequelize.STRING,
         allowNull: false,
     },
@@ -26,7 +26,7 @@ module.exports = sequelize.define("User", {
         isEmail: true,
         allowNull: false,
     },
-    profilePicture: {
+    avatar: {
         type: Sequelize.STRING,
         allowNull: true,
     },
