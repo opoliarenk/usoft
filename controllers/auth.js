@@ -1,7 +1,6 @@
 'use strict';
 
 const User = require('../models/User');
-const { Op } = require("sequelize");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const asyncHand = require('../helper/asyncHand');
@@ -77,7 +76,7 @@ exports.login = async (req, res) => {
         const user = await User.findOne({where: {
                 login: login
             }});
-        if (!user || !bcrypt.compare(password, user.password)) {
+        if (!user || !await bcrypt.compare(password, user.password)) {
             res.status(400).send({
                 message: 'User or password is incorrect'
             });
@@ -129,13 +128,13 @@ exports.confirmEmail = async (req, res) =>{
 }
 
 exports.resetPass = asyncHand(async (req, res) => {
-    const {email} = req.body.email;
+    const {email} = req.body;
     const user = await User.findOne({where: {email: email}});
     const resConfirmStr = randStr();
 
     if (user) {
         await User.update({
-            resetToken: resetToken,
+            resetToken: resConfirmStr,
             expires: Date.now() + 36000
         }, {where: {id: user.id}});
 
@@ -143,20 +142,38 @@ exports.resetPass = asyncHand(async (req, res) => {
             to: email,
             subject: 'Password reset request',
             html: `<h2>To change password press the link<h2>
-                    <a href="http://localhost:3000/api/auth/password-reset/${resConfirmStr} "> Change password </a>
+                    <a href="http://localhost:8080/api/auth/password-reset/${resConfirmStr}"> Change password </a>
                     <br>
                     <i>Don't repeat this mail!</i>`
         }
         sendMail(message);
-        res.status(200).send('password reset link send');
+        res.status(200).send(`password reset link send ${resConfirmStr}`);
     } else {
         res.status(400).send('user not found')
     }
 });
 
-exports.resetConfirm = async(req, res) => {
+exports.resetForm = async (req, res) => {
+    res.status(200).send(`
+<div><form method="POST" action="http://localhost:8080/password-reset/${req.params.code}/confirm">
+<input placeholder="new password" name="newPass" value="" required>
+<input placeholder="repeat password" name="repeatPass" value="" required>
+<button type="submit">SEND</button></form></div>`);
+}
 
-};
+exports.resetConfirm = asyncHand(async(req, res) => {
+    const {newPass, confirmPass} = req.body;
+    const user = await User.findOne({where: {resetToken: req.params.code}});
+
+    if (newPass === confirmPass) {
+        await User.update({
+            password: await bcrypt.hash(newPass, saltRounds),
+        }, {where: {id: user.id}});
+        res.status(200).send('new password confirmed');
+    } else {
+        res.status(400).send('passwords not equal');
+    }
+});
 
 
 

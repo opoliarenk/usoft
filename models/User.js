@@ -52,5 +52,6 @@ module.exports = sequelize.define("User", {
     resetToken: {
         type: Sequelize.STRING,
         allowNull: true,
+        defaultValue: '',
     },
 })

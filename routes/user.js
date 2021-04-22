@@ -3,9 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    console.log("get all users");
-});
+router.get('/', });
 
 router.get('/:id', async (req, res) => {
     console.log("get spec user data");

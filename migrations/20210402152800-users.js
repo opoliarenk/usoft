@@ -53,6 +53,7 @@ module.exports = {
       },
       resetToken: {
         type: Sequelize.STRING,
+        defaultValue: '',
         allowNull: true,
       },
       createdAt: Sequelize.DATE,
