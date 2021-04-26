@@ -20,4 +20,6 @@ router.post("/password-reset/:code/confirm", user.resetConfirm);
 
 router.get('/confirm/:code', user.confirmEmail);
 
+router.get('/me', user.me);
+
 module.exports = router;

@@ -1,17 +1,15 @@
-const express = require('express');
-const router = express.Router();
+'use strict'
 
-router.get('/', async (req, res) => {
-    console.log('get all posts');
-});
+const router = require('express').Router();
+const post = require('../controllers/post');
+
+router.get('/', post.getAllPosts);
 
 router.get('/:id', async (req, res) => {
     console.log('get post by id');
 });
 
-router.get('/:id/comments', async (req, res) => {
-    console.log('get comment by id');
-});
+router.get('/:id/comments', post.createComment);
 
 router.post('/:id/comments', async (req, res) => {
     console.log('create a new comment');

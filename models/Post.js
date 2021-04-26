@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../db/db');
 
-const post = sequelize.define('postEntity', {
+module.exports = sequelize.define('Post', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

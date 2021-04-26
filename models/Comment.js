@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../db/db');
 
-const comments = sequelize.define('commentEntity', {
+module.exports = sequelize.define('Comment', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -19,5 +18,9 @@ const comments = sequelize.define('commentEntity', {
     content: {
         type: Sequelize.STRING,
         allowNull: false,
-    }
+    },
+    postId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
 });

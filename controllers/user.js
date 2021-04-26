@@ -29,7 +29,6 @@ exports.getUserById = asyncHand(async (req, res) => {
         })
     }else {
         res.status(400).send('user not found');
-        return;
     }
 });
 
