@@ -2,18 +2,15 @@
 
 const router = require('express').Router();
 const post = require('../controllers/post');
+const {protect} = require('../helper/protect');
 
 router.get('/', post.getAllPosts);
 
-router.get('/:id', async (req, res) => {
-    console.log('get post by id');
-});
+router.get('/:id', post.getPostById);
 
-router.get('/:id/comments', post.createComment);
+router.get('/:id/comments',post.getCommentsPost);
 
-router.post('/:id/comments', async (req, res) => {
-    console.log('create a new comment');
-});
+router.post('/:id/comments', protect, post.createComment);
 
 router.get('/:id/categories', async (req, res) => {
     console.log('get all categories associated with the specified post');

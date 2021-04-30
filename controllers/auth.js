@@ -3,7 +3,7 @@
 require('dotenv').config();
 
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const asyncHand = require('../helper/asyncHand');
 const isEmail = require('isemail');
@@ -89,7 +89,7 @@ exports.login = asyncHand(async (req, res) => {
 
     if (!user || !await bcrypt.compare(password, user.password)) {
         res.status(400).send({
-            message: 'User or password is incorrect'
+            message: 'login or password is incorrect'
         });
 
         return;
@@ -103,7 +103,7 @@ exports.login = asyncHand(async (req, res) => {
     }
     const payload = { id: user.id };
     const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
-        expiresIn: '18000s',
+        expiresIn: 18000,
     });
 
     res.status(200).json({ success: true, data: token });
@@ -174,31 +174,3 @@ exports.resetConfirm = asyncHand(async(req, res) => {
         res.status(400).send('passwords not equal');
     }
 });
-
-exports.me = async (req,res) => {
-    if (req.headers && req.headers.authorization) {
-        let authorization = req.headers.authorization.split(' ')[1],
-            decoded;
-        try {
-            decoded = await jwt.verify(authorization, secret.secretToken);
-        } catch (e) {
-            res.status(401).send('unauthorized');
-            return
-        }
-        let userId = decoded.id;
-        // Fetch the user by id
-        await User.findOne({_id: userId})
-            .then(function(user){
-            // Do something with the user
-            res.status(200).send({
-                message: user,
-            });
-            return;
-        });
-    }
-    res.status(500).send({
-        message: 'message error',
-    });
-    return;
-}
-

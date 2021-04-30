@@ -29,10 +29,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      categories: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      }
     });
   },
 

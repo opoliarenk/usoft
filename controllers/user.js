@@ -33,33 +33,39 @@ exports.getUserById = asyncHand(async (req, res) => {
 });
 
 exports.createUser = asyncHand(async(req, res) => {
-    //only for admins {to do}
-    const {login, password, passConfirm, email, role, fullNamex} = req.body;
-    const checkLogin = await User.findOne({where: {login: login}});
-    const checkEmail = await User.findOne({where: {email: email}});
-    const validEmail = isEmail.validate(email, {errorLevel: false});
+    //only for admins
+    if (req.user.role === 'admin') {
+        const {login, password, passConfirm, email, role, fullName} = req.body;
+        const checkLogin = await User.findOne({where: {login: login}});
+        const checkEmail = await User.findOne({where: {email: email}});
+        const validEmail = isEmail.validate(email, {errorLevel: false});
 
-    if (checkEmail || checkLogin || !validEmail) {
-        res.status(400).send({
-            message: 'wrong params',
-        });
-    }
-
-    await User.create({
-        login: login,
-        password: await bcrypt.hash(password, 10),
-        full_name: fullName,
-        email: email,
-        confirmed: false,
-        confirmStr: confirmStr,
-    })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
+        if (checkEmail || checkLogin || !validEmail) {
+            res.status(400).send({
+                message: 'wrong params',
             });
-        });
-    res.status(200).json({success: true});
+        }
+
+        await User.create({
+            login: login,
+            password: await bcrypt.hash(password, 10),
+            full_name: fullName,
+            email: email,
+            confirmed: false,
+            confirmStr: confirmStr,
+        })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while creating the User."
+                });
+            });
+        res.status(200).json({success: true});
+    } else {
+        res.status(400).send({
+            message: "Authorization denied, only admins can visit this route"
+        })
+    }
 });
 
 exports.uploadAvatar = asyncHand(async (res, req) => {

@@ -27,8 +27,4 @@ module.exports = sequelize.define('Post', {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    categories: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    }
 });

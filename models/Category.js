@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../db/db');
 
-const category = sequelize.define('categoryEntity', {
+module.exports = sequelize.define('Category', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -15,5 +14,5 @@ const category = sequelize.define('categoryEntity', {
     description: {
         type: Sequelize.STRING,
         allowNull: false,
-    }
+    },
 });
