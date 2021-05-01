@@ -4,11 +4,13 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     await queryInterface.bulkInsert('users', [{
-      login: 'opoliarenk',
-      password: '$2a$12$tWiUQrUvQ7gC2jMnF16f4ehJRllJDwqE7kgtCqR6dmcaZBH1E3BhS',
+      login: 'lena',
+      password: '$2a$10$FcO9PraFpsMeD7jm1K6JQegra/awlZa1EoZ9RtHNz5NHmXq2LlB9q',
       email: 'lenailoveyou11@gmail.com',
       fullName: 'Olena',
-      confirmStr: 'conddd',
+      confirmStr: 'confirmStrAdmin',
+      role: 'admin',
+      confirmed: true,
     }], {});
   },
 

@@ -1,9 +1,9 @@
 'use strict'
 
-const {User, Post, Comment, PostCategory} = require('../models');
-// const Post = require('../models/Post');
-// const Comment = require('../models/Comment')
-const asyncHand = require('../helper/asyncHand');
+const PostCategory = require('../models/PostCategory');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment')
+const asyncHand = require('../midleware/asyncHand');
 const jwt = require('jsonwebtoken');
 
 exports.getAllPosts = asyncHand(async (req, res) => {
@@ -42,8 +42,9 @@ exports.getCommentsPost = asyncHand(async (req, res) => {
     }
 });
 
-exports.createComment = asyncHand(async (req, res) => {
+exports.createComment = asyncHand(async (req, res, next) => {
     const content = req.body.content;
+
     await Comment.create({
         author: req.user.id,
         publishDate: new Date.now(),
@@ -56,8 +57,11 @@ exports.createComment = asyncHand(async (req, res) => {
                     err.message || "Some error occurred while creating the User."
             });
         });
-    res.status(200).send({
-        message: 'comment created successfully'
+
+    res.status(200).json({
+        success: true,
+        message: 'comment created successfully',
+        data: content,
     });
 });
 

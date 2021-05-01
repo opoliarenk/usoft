@@ -5,11 +5,11 @@ require('dotenv').config();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
-const asyncHand = require('../helper/asyncHand');
+const asyncHand = require('../midleware/asyncHand');
 const isEmail = require('isemail');
-const { randStr } = require('../helper/randStr');
+const { randStr } = require('../midleware/randStr');
 const jwt = require("jsonwebtoken");
-const sendMail = require('../helper/sendMessageEmail');
+const sendMail = require('../midleware/sendMail');
 
 exports.register = asyncHand(async (req, res) => {
     const {login, email, password, fullName, passConfirm} = req.body;
@@ -72,11 +72,13 @@ exports.register = asyncHand(async (req, res) => {
                     <br>
                     <i>Don't repeat this mail!</i>`
     }
+
     sendMail(message);
-    res.status(200).send({
-        message: `Account created successfully ${confirmStr}`
+    res.status(200).json({
+        success: true,
+        data: confirmStr,
+        message: 'Account created successfully',
     });
-    res.status(200).json({success: true, data: token});
 
     return;
 });
@@ -127,7 +129,7 @@ exports.confirmEmail = async (req, res) =>{
     }
 }
 
-exports.resetPass = asyncHand(async (req, res) => {
+exports.resetPass = asyncHand(async (req, res, next) => {
     const {email} = req.body;
     const user = await User.findOne({where: {email: email}});
     const resConfirmStr = randStr();
@@ -155,9 +157,9 @@ exports.resetPass = asyncHand(async (req, res) => {
 
 exports.resetForm = async (req, res) => {
     res.status(200).send(`
-<div><form method="POST" action="http://localhost:8080/password-reset/${req.params.code}/confirm">
+<div><form method="POST" action="http://localhost:8080/api/auth/password-reset/${req.params.code}/confirm">
 <input placeholder="new password" name="newPass" value="" required>
-<input placeholder="repeat password" name="repeatPass" value="" required>
+<input placeholder="repeat password" name="confirmPass" value="" required>
 <button type="submit">SEND</button></form></div>`);
 }
 

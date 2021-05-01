@@ -1,19 +1,20 @@
-'use strict'
+'use strict';
 
 const router = require('express').Router();
 const user = require('../controllers/user');
-const {protect} = require('../helper/protect');
+const {isToken} = require('../midleware/isToken');
+const {isAdmin} = require('../midleware/isAdmin');
 
 router.get('/', user.getALlUsers);
 
 router.get('/:id', user.getUserById);
 
-router.post('/', protect, user.createUser);
+router.post('/', isToken, isAdmin, user.createUser);
 
-router.post('/avatar', user.uploadAvatar);
+router.post('/avatar', isToken, user.uploadAvatar);
 
-router.patch('/:id', user.updUser);
+router.patch('/:id', isToken, user.updUser);
 
-router.delete('/:id', user.deleteUser);
+router.delete('/:id', isToken, user.deleteUser);
 
 module.exports = router;

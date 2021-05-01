@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const post = require('../controllers/post');
-const {protect} = require('../helper/protect');
+const {isToken} = require('../midleware/isToken');
 
 router.get('/', post.getAllPosts);
 
@@ -10,7 +10,7 @@ router.get('/:id', post.getPostById);
 
 router.get('/:id/comments',post.getCommentsPost);
 
-router.post('/:id/comments', protect, post.createComment);
+router.post('/:id/comments', isToken, post.createComment);
 
 router.get('/:id/categories', async (req, res) => {
     console.log('get all categories associated with the specified post');
