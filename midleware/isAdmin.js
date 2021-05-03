@@ -1,12 +1,15 @@
 'use strict';
 
-exports.isAdmin = async (req, res, next) => {
-    if (req.user.role === 'admin') {
-        next();
-    }
+const asyncHand = require('../midleware/asyncHand');
 
-    return next({
-        message: "Authorization denied, only admins can visit this route",
-        statusCode: 403,
-    });
-};
+exports.isAdmin = asyncHand(async (req, res, next) => {
+    if (req.user.role === 'admin') {
+        console.log('yes -> admin');
+        next();
+    } else {
+        res.status(403).json({
+            message: "permission denied -> admin",
+            success: false,
+        });
+    }
+});

@@ -13,7 +13,7 @@ router.post('/', isToken, isAdmin, user.createUser);
 
 router.post('/avatar', isToken, user.uploadAvatar);
 
-router.patch('/:id', isToken, user.updUser);
+router.patch('/:id', isToken, user.updateUser);
 
 router.delete('/:id', isToken, user.deleteUser);
 

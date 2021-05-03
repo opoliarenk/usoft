@@ -46,6 +46,8 @@ exports.createUser = asyncHand(async(req, res, next) => {
         res.status(400).send({
             message: 'wrong params',
         });
+
+        return;
     }
 
     await User.create({
@@ -54,7 +56,7 @@ exports.createUser = asyncHand(async(req, res, next) => {
         fullName: fullName,
         email: email,
         confirmed: false,
-        confirmStr: confirmStr,
+        confirmStr: 'adminCreate',
         role: role,
     })
         .catch(err => {
@@ -83,8 +85,35 @@ exports.uploadAvatar = asyncHand(async (res, req, next) => {
     }
 });
 
-exports.updUser = asyncHand(async (res, req, next) => {
-    if (req.user.role === 'admin' || req.user.id === req.params.id) {
+exports.deleteUser = asyncHand(async (req, res, next) => {
+    //delete user
+    console.log(req.user);
+    if (req.user.role === 'admin' || req.user.id == req.params.id) {
+        const user = User.destroy({where: {id: req.params.id}});
+
+        if (user !== null) {
+            res.status(200).json({
+                success: true,
+                data: {},
+            });
+        } else {
+            res.status(400).send({
+                message: 'user not found',
+            });
+        }
+    } else {
+        res.status(403).send({
+            message: 'permission denied',
+            data: req.user.role,
+            user: req.user.id,
+            params: req.params.id,
+        });
+    }
+});
+
+exports.updateUser = asyncHand(async (req, res, next) => {
+    console.log(req.user);
+    if (req.user.role === 'admin' || req.user.id == req.params.id) {
         const {login, fullName, email, password, role} = req.body;
         let data = {};
 
@@ -142,32 +171,6 @@ exports.updUser = asyncHand(async (res, req, next) => {
     } else {
         res.status(403).send({
             message: 'permission denied',
-        });
-    }
-});
-
-
-exports.deleteUser = asyncHand(async (req, res, next) => {
-    //delete user
-    if (req.user.role === 'admin' || req.user.id == req.params.id) {
-        const user = User.destroy({where: {id: req.params.id}});
-
-        if (user !== null) {
-            res.status(200).json({
-                success: true,
-                data: {},
-            });
-        } else {
-            res.status(400).send({
-                message: 'user not found',
-            });
-        }
-    } else {
-        res.status(403).send({
-            message: 'permission denied',
-            data: req.user.role,
-            user: req.user.id,
-            params: req.params.id,
         });
     }
 });
