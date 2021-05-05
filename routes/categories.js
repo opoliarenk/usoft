@@ -1,28 +1,22 @@
-const express = require('express');
-const router = express.Router();
+'use strict'
 
-router.get('/', async (req, res) => {
-    console.log('get all categories');
-});
+const router = require('express').Router();
+const categories = require('../controllers/categories');
+const {isToken} = require('../midleware/isToken');
+const {isAdmin} = require('../midleware/isAdmin');
 
-router.get('/:id', async (req, res) => {
-    console.log('get category by id');
-});
+router.get('/', categories.getCategories);
+
+router.get('/:id', categories.getCategoryById);
 
 router.get('/:id/posts', async (req, res) => {
     console.log('get post by category');
 });
 
-router.post('/', async (req, res) => {
-    console.log('create a new category');
-});
+router.post('/', isToken, isAdmin, categories.newCategory);
 
-router.patch('/:id', async (req, res) => {
-    console.log('update spec category');
-});
+router.patch('/:id', isToken, isAdmin, categories.updatecategory);
 
-router.delete('/:id', async (req, res) => {
-    console.log('delete a category');
-});
+router.delete('/:id', isToken, isAdmin, categories.deleteCategory);
 
 module.exports = router;

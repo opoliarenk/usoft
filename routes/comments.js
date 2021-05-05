@@ -1,30 +1,18 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const comment = require('../controllers/comments');
 
-router.get('/:id', async (req, res) => {
-    console.log('get spec comment data');
-});
+router.get('/:id', comment.getCommentById);
 
-router.get('/:id/like', async (req, res) => {
-    console.log('get all likes under the spec comment');
-});
+router.get('/:id/like', comment.getLikes);
 
-router.post('/:id/like', async (req, res) => {
-    console.log('create a new like under a comment');
-});
+router.post('/:id/like', comment.createLike);
 
-router.patch('/:id', async (req, res) => {
-    console.log('update spec comment data');
-});
+router.patch('/:id', comment.updateComment);
 
-router.delete('/:id', async (req, res) => {
-    console.log('delete a comment');
-});
+router.delete('/:id', comment.deleteComment);
 
-router.delete('/:id/like', async (req, res) => {
-    console.log('delete a like under a comment');
-});
+router.delete('/:id/like', comment.deleteLike);
 
 module.exports = router;

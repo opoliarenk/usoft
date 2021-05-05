@@ -13,6 +13,6 @@ module.exports = sequelize.define('Category', {
     },
     description: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 });

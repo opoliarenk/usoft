@@ -37,7 +37,7 @@ exports.getUserById = asyncHand(async (req, res) => {
 
 exports.createUser = asyncHand(async(req, res, next) => {
     //only for admins
-    const {login, password, email, fullName, role} = req.body;
+    const {login, password, passwordConfirm, email, fullName, role} = req.body;
     const checkLogin = await User.findOne({where: {login: login}});
     const checkEmail = await User.findOne({where: {email: email}});
     const validEmail = isEmail.validate(email, {errorLevel: false});
@@ -45,6 +45,13 @@ exports.createUser = asyncHand(async(req, res, next) => {
     if (checkEmail || checkLogin || !validEmail) {
         res.status(400).send({
             message: 'wrong params',
+        });
+
+        return;
+    }
+    if (password !== passwordConfirm) {
+        res.status(400).send({
+            message: 'repeat pass',
         });
 
         return;
@@ -87,14 +94,13 @@ exports.uploadAvatar = asyncHand(async (res, req, next) => {
 
 exports.deleteUser = asyncHand(async (req, res, next) => {
     //delete user
-    console.log(req.user);
     if (req.user.role === 'admin' || req.user.id == req.params.id) {
-        const user = User.destroy({where: {id: req.params.id}});
+        const user = await User.destroy({where: {id: req.params.id}});
 
         if (user !== null) {
             res.status(200).json({
                 success: true,
-                data: {},
+                message: 'delete successfully',
             });
         } else {
             res.status(400).send({
@@ -104,9 +110,6 @@ exports.deleteUser = asyncHand(async (req, res, next) => {
     } else {
         res.status(403).send({
             message: 'permission denied',
-            data: req.user.role,
-            user: req.user.id,
-            params: req.params.id,
         });
     }
 });

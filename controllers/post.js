@@ -4,7 +4,6 @@ const PostCategory = require('../models/PostCategory');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment')
 const asyncHand = require('../midleware/asyncHand');
-const jwt = require('jsonwebtoken');
 
 exports.getAllPosts = asyncHand(async (req, res) => {
     await Post.findAndCountAll()
