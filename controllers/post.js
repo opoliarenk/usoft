@@ -2,7 +2,8 @@
 
 const PostCategory = require('../models/PostCategory');
 const Post = require('../models/Post');
-const Comment = require('../models/Comment')
+const Comment = require('../models/Comment');
+const LikePost = require('../models/LikePost');
 const asyncHand = require('../midleware/asyncHand');
 
 exports.getAllPosts = asyncHand(async (req, res) => {
@@ -72,3 +73,22 @@ exports.getCategoriesPost = async(req, res) => {
         data: postCategory,
     });
 }
+
+exports.getLikes = async(req, res) => {
+    const likes = await LikePost.getAll({where: {postId: req.params.id}})
+
+    if (likes) {
+        res.status(200).json({
+            success: true,
+            data: likes,
+        });
+    } else {
+        res.status(400).send({
+            message: 'cannot get likes from post',
+        });
+    }
+}
+
+exports.createPost = asyncHand(async (req, res) => {
+    
+})

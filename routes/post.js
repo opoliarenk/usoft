@@ -16,9 +16,7 @@ router.get('/:id/categories', async (req, res) => {
     console.log('get all categories associated with the specified post');
 });
 
-router.get('/:id/like', async (req, res) => {
-    console.log('get all likes under the specified post');
-});
+router.get('/:id/like', post.getLikes);
 
 router.post('/', async (req, res) => {
     console.log('create a new post');
