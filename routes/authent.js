@@ -1,7 +1,7 @@
 'use strict';
 
-const user = require("../controllers/auth");
 const router = require("express").Router();
+const user = require("../controllers/auth");
 const {isToken} = require('../midleware/isToken');
 
 router.post("/register", user.register);
@@ -9,9 +9,7 @@ router.post("/register", user.register);
 router.post("/login", user.login);
 
 //to do -> logout
-router.post("/logout", async (req, res) => {
-    console.log("/api/auth/logout");
-});
+router.post("/logout", isToken, user.logout);
 
 router.post("/password-reset", isToken, user.resetPass);
 

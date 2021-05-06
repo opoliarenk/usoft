@@ -1,6 +1,8 @@
 'use strict'
 
 const Category = require('../models/Category');
+const PostCategory = require('../models/PostCategory');
+const Post = require('../models/Post');
 const asyncHand = require('../midleware/asyncHand');
 
 exports.getCategories = asyncHand(async (req, res) => {
@@ -87,3 +89,18 @@ exports.deleteCategory = asyncHand(async (req, res) => {
         });
     }
 });
+
+exports.getPostsCat = asyncHand(async (req, res) => {
+    const posts = await PostCategory.findAll({where: {categoryId: req.params.id}});
+    let data = {};
+
+    for (const post of posts) {
+        data.push(await Post.findOne({where: {id: post.id}}));
+    }
+
+    res.status(200).json({
+        success: true,
+        data: data,
+    });
+})
+

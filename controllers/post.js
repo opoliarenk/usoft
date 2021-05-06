@@ -1,7 +1,7 @@
 'use strict'
 
 const PostCategory = require('../models/PostCategory');
-const Post = require('../models/Post');
+const {Post} = require('../models/Post');
 const Comment = require('../models/Comment');
 const LikePost = require('../models/LikePost');
 const asyncHand = require('../midleware/asyncHand');
@@ -30,9 +30,9 @@ exports.getPostById = asyncHand(async (req, res) => {
 });
 
 exports.getCommentsPost = asyncHand(async (req, res) => {
-    const comments = await Comment.findAll({where: {postId: req.params.id}});
+    if (await Post.findOne({where: {id: req.params.id}})) {
+        const comments = await Comment.findAll({where: {postId: req.params.id}});
 
-    if (comments) {
         res.status(200).json({
             success: true,
             data: comments,
@@ -47,7 +47,7 @@ exports.createComment = asyncHand(async (req, res, next) => {
 
     await Comment.create({
         author: req.user.id,
-        publishDate: new Date.now(),
+        publishDate: Date.now(),
         content: content,
         postId: req.params.id,
     })
@@ -66,18 +66,23 @@ exports.createComment = asyncHand(async (req, res, next) => {
 });
 
 exports.getCategoriesPost = async(req, res) => {
-    const postCategory = await PostCategory.getAll({where: {postId: req.params.id}});
+    if (await Post.findOne({where: {id: req.params.id}})) {
+        const postCategory = await PostCategory.findAll({where: {postId: req.params.id}});
 
-    res.status(200).json({
-        success: true,
-        data: postCategory,
-    });
+        res.status(200).json({
+            success: true,
+            data: postCategory,
+        });
+    } else {
+        res.status(400).send({
+            message: 'post not found',
+        });
+    }
 }
 
 exports.getLikes = async(req, res) => {
-    const likes = await LikePost.getAll({where: {postId: req.params.id}})
-
-    if (likes) {
+    if (await Post.findOne({where: {id: req.params.id}})) {
+        const likes = await LikePost.findAll({where: {postId: req.params.id}})
         res.status(200).json({
             success: true,
             data: likes,
@@ -90,5 +95,96 @@ exports.getLikes = async(req, res) => {
 }
 
 exports.createPost = asyncHand(async (req, res) => {
-    
-})
+    const {content, title} = req.body;
+
+    await Post.create({
+        author: req.user.id,
+        title: title,
+        publishDate: Date.now(),
+        status: 'active',
+        content: content,
+    });
+    res.status(200).json({
+        success: true,
+        message: 'create post successfully',
+    })
+});
+
+exports.createLike = asyncHand(async (req, res) => {
+    const postId = req.params.id;
+    const like = await LikePost.findOne({where: {
+            author: req.user.id,
+            postId: postId,
+        }});
+
+    if (!like && await Post.findOne({where: {id: postId}})) {
+        await LikePost.create({
+            author: req.user.id,
+            postId: postId,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'like create successfully',
+        });
+    } else {
+        res.status(400).send('cannot like post');
+    }
+});
+
+exports.updatePost = asyncHand(async (req, res) => {
+    const post = await Post.findOne({where: {id: req.params.id}});
+
+    if (post && req.user.id === post.author) {
+        let data = {};
+
+        data['content'] = req.body.content;
+        await Post.update(data, {where: {id: req.params.id}});
+
+        res.status(200).send('post edit successfully');
+    } else {
+        res.status(400).send('permission denied');
+    }
+});
+
+exports.deletePost = asyncHand(async (req, res) => {
+    const post = await Post.findOne({where: {id: req.params.id}});
+
+    if (post && (req.user.role === 'admin' || req.user.id == post.author)) {
+        if (post !== null) {
+            res.status(200).json({
+                success: true,
+                message: 'delete successfully',
+            });
+        } else {
+            res.status(400).send({
+                message: 'post not found',
+            });
+        }
+    } else {
+        res.status(403).send({
+            message: 'permission denied',
+        });
+    }
+});
+
+exports.deleteLike = asyncHand(async(req, res) => {
+    const postId = req.params.id;
+    const like = await LikePost.findOne({where: {
+            author: req.user.id,
+            postId: postId,
+        }});
+
+    if (!like && await Post.findOne({where: {id: postId}})) {
+        await LikePost.destroy({where: {
+                author: req.user.id,
+                postId: postId,
+            }});
+        res.status(200).json({
+            success: true,
+            message: 'like removed successfully',
+        });
+    } else {
+        res.status(400).send('cannot delete like post');
+    }
+});

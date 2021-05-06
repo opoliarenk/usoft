@@ -9,9 +9,7 @@ router.get('/', categories.getCategories);
 
 router.get('/:id', categories.getCategoryById);
 
-router.get('/:id/posts', async (req, res) => {
-    console.log('get post by category');
-});
+router.get('/:id/posts', categories.getPostsCat);
 
 router.post('/', isToken, isAdmin, categories.newCategory);
 

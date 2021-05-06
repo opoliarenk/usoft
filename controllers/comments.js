@@ -55,9 +55,9 @@ exports.deleteComment = asyncHand(async (req, res) => {
 });
 
 exports.getLikes = asyncHand(async (req, res) => {
-    const likes = await Likes.findAll({where: {commentId: req.params.id}});
+    if (await Comment.findOne({where: {id: req.params.id}})) {
+        const likes = await Likes.findAll({where: {commentId: req.params.id}});
 
-    if (likes) {
         res.status(200).json({
             data: likes,
             success: true,

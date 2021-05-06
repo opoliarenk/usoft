@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable("likeComment", {
+    return queryInterface.createTable("likeComments", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -17,6 +17,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
     });
   },
 

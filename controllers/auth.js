@@ -176,3 +176,10 @@ exports.resetConfirm = asyncHand(async(req, res) => {
         res.status(400).send('passwords not equal');
     }
 });
+
+exports.logout = asyncHand(async (req, res) => {
+    const payload = { id: req.user.id };
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
+        expiresIn: 18000,
+    });
+})

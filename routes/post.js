@@ -12,30 +12,18 @@ router.get('/:id/comments',post.getCommentsPost);
 
 router.post('/:id/comments', isToken, post.createComment);
 
-router.get('/:id/categories', async (req, res) => {
-    console.log('get all categories associated with the specified post');
-});
+router.get('/:id/categories', post.getCategoriesPost);
 
 router.get('/:id/like', post.getLikes);
 
-router.post('/', async (req, res) => {
-    console.log('create a new post');
-});
+router.post('/', isToken, post.createPost);
 
-router.post('/:id/like', async (req, res) => {
-    console.log('create a new like under the spec post');
-});
+router.post('/:id/like', isToken, post.createLike);
 
-router.patch('/:id', async (req, res) => {
-    console.log('update post');
-})
+router.patch('/:id', isToken, post.updatePost);
 
-router.delete('/:id', async (req, res) => {
-    console.log('delete post');
-});
+router.delete('/:id', isToken, post.deletePost);
 
-router.delete('/:id/like', async (req, res) => {
-    console.log('delete a like under a post');
-});
+router.delete('/:id/like', isToken, post.deleteLike);
 
 module.exports = router;
