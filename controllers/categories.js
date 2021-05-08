@@ -92,10 +92,12 @@ exports.deleteCategory = asyncHand(async (req, res) => {
 
 exports.getPostsCat = asyncHand(async (req, res) => {
     const posts = await PostCategory.findAll({where: {categoryId: req.params.id}});
-    let data = {};
+    let data = [];
 
     for (const post of posts) {
-        data.push(await Post.findOne({where: {id: post.id}}));
+        console.log(post.postId);
+        let category = await Post.findOne({where: {id: post.postId}});
+        data.push(category);
     }
 
     res.status(200).json({

@@ -1,13 +1,6 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
-module.exports = (sequelize, DataTypes) => {
-    class Post extends Sequelize {
-        static associate(models) {
-            Post.hasMany(models.PostCategory, {foreignKey: 'postId'});
-        }
-    }
-
-    Post.init({
+module.exports = sequelize.define("Post", {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -34,9 +27,4 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-    }, {
-        sequelize,
-        modelName: 'Post',
-    });
-    return Post;
-};
+});

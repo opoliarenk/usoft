@@ -1,9 +1,10 @@
 'use strict'
 
 const PostCategory = require('../models/PostCategory');
-const {Post} = require('../models/Post');
+const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const LikePost = require('../models/LikePost');
+const Category = require('../models/Category');
 const asyncHand = require('../midleware/asyncHand');
 
 exports.getAllPosts = asyncHand(async (req, res) => {
@@ -96,14 +97,26 @@ exports.getLikes = async(req, res) => {
 
 exports.createPost = asyncHand(async (req, res) => {
     const {content, title} = req.body;
+    const categories = req.body.categories.split(",");
+    let iter;
 
-    await Post.create({
+    let newPost = await Post.create({
         author: req.user.id,
         title: title,
         publishDate: Date.now(),
         status: 'active',
         content: content,
     });
+
+    for (let category of categories) {
+        iter = await Category.findOne({where: {title: category}});
+        if (iter) {
+            await PostCategory.create({
+                postId: newPost.id,
+                categoryId: iter.id,
+            })
+        }
+    }
     res.status(200).json({
         success: true,
         message: 'create post successfully',
