@@ -13,12 +13,11 @@ const sendMail = require('../midleware/sendMail');
 
 exports.register = asyncHand(async (req, res) => {
     const {login, email, password, fullName, passConfirm} = req.body;
-    const checkLogin = ;
+    const checkLogin = await User.findOne({where: {login: login}});
     const checkEmail = await User.findOne({where: {email: email}});
     const validEmail = isEmail.validate(email, {errorLevel: false});
 
-//check if login
-    if (await User.findOne({where: {login: login}})) {
+    if (checkLogin) {
         res.status(400).send({
             message: 'User with that login already exists',
         });
